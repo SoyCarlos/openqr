@@ -297,6 +297,7 @@ export default function QRGenerator() {
   const [options, setOptions] = useState<QROptions>(defaultOptions);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const trackedUrlRef = useRef<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [urlError, setUrlError] = useState("");
   const [logoError, setLogoError] = useState("");
@@ -326,6 +327,10 @@ export default function QRGenerator() {
       setIsGenerating(true);
       try {
         await renderQR(canvasRef.current!, { ...options, size: 1024 });
+        if (options.url && options.url !== trackedUrlRef.current) {
+          trackedUrlRef.current = options.url;
+          trackEvent("qr_created", { url: options.url });
+        }
       } catch {
         // Invalid URL or QR data — canvas will show last valid state
       }
@@ -344,7 +349,6 @@ export default function QRGenerator() {
     link.download = "qrcode.png";
     link.href = canvas.toDataURL("image/png");
     link.click();
-    trackEvent("qr_created", { format: "png", url: options.url });
     trackEvent("qr_downloaded", { format: "png" });
   }, [options]);
 
@@ -356,7 +360,6 @@ export default function QRGenerator() {
     link.href = URL.createObjectURL(blob);
     link.click();
     URL.revokeObjectURL(link.href);
-    trackEvent("qr_created", { format: "svg", url: options.url });
     trackEvent("qr_downloaded", { format: "svg" });
   }, [options]);
 
