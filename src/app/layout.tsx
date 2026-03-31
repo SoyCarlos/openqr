@@ -36,13 +36,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        {/* Umami Analytics — uncomment and set data-website-id to enable:
         <script
           defer
-          src="https://your-umami-instance.com/script.js"
-          data-website-id="YOUR_WEBSITE_ID"
+          src="https://cloud.umami.is/script.js"
+          data-website-id="80c9f4bf-456c-48b7-a2ad-63fec50ec9b0"
         />
-        */}
       </body>
     </html>
   );

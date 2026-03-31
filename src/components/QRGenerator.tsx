@@ -344,6 +344,7 @@ export default function QRGenerator() {
     link.download = "qrcode.png";
     link.href = canvas.toDataURL("image/png");
     link.click();
+    trackEvent("qr_created", { format: "png", url: options.url });
     trackEvent("qr_downloaded", { format: "png" });
   }, [options]);
 
@@ -355,6 +356,7 @@ export default function QRGenerator() {
     link.href = URL.createObjectURL(blob);
     link.click();
     URL.revokeObjectURL(link.href);
+    trackEvent("qr_created", { format: "svg", url: options.url });
     trackEvent("qr_downloaded", { format: "svg" });
   }, [options]);
 
